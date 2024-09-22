@@ -103,9 +103,33 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		char msg[] = "Hello from STM32 for USB Testing setup\n";
-		CDC_Transmit_FS((uint8_t*)msg, strlen(msg));
-		HAL_Delay(1000);
+/* Infinite loop */
+/* USER CODE BEGIN WHILE */
+while (1)
+{
+    // Start ADC conversion
+    HAL_ADC_Start(&hadc1);
+
+    // Poll for ADC conversion completion
+    if (HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY) == HAL_OK)
+    {
+        // Get the ADC value from PA1 (A1)
+        uint32_t adcValue = HAL_ADC_GetValue(&hadc1);
+
+        // Convert the ADC value to a string
+        char buffer[20];
+        sprintf(buffer, "%lu\n", adcValue);  // Send raw value
+
+        // Transmit the data over USB
+        CDC_Transmit_FS((uint8_t*)buffer, strlen(buffer));
+    }
+
+    // Stop the ADC
+    HAL_ADC_Stop(&hadc1);
+
+    // Delay adjusted for higher sampling rate (2ms for 500Hz sampling rate)
+    HAL_Delay(2);
+}
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
