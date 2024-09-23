@@ -118,7 +118,7 @@ while (1)
 
         // Convert the ADC value to a string
         char buffer[20];
-        sprintf(buffer, "%lu\n", adcValue);  // Send raw value
+			sprintf(buffer, "ECG: %lu\n", adcValue);  // Send raw value
 
         // Transmit the data over USB
         CDC_Transmit_FS((uint8_t*)buffer, strlen(buffer));
